@@ -20,3 +20,11 @@ td {
   font-weight: bold;
   text-align: center;
 }
+
+.x {
+  background-color: #7FFF00;
+}
+
+.o {
+  background-color: #FF8A00;
+}
