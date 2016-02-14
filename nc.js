@@ -27,7 +27,7 @@ $(document).on('ready', function() {
     }
 
     // Figure out whether the turn was a winning one
-    if (turn > 7) {
+    if (turn > 2) {
       checkWinningTurn();
     }
 
@@ -69,20 +69,18 @@ $(document).on('ready', function() {
     var xSum = sumIds(xIdNums);
 
     // Compare oSum and xSum to the winning sum
-    if ( oSum === 65 ) {
+    if ( oSum === 15 ) {
       alert("O is the winner!");
-    } else if ( xSum === 65 ) {
+    } else if ( xSum === 15 ) {
       alert("X is the winner!");
     }
   }
 
 })
 
-// Magic Square (5 x 5)
-// Sum of any row, column, or diagonal: 65
+// Magic Square (3 x 3)
+// Sum of any row, column, or diagonal: 15
 
-// 11  18  25   2   9
-// 10  12  19  21   3
-//  4   6  13  20  22
-// 23   5   7  14  16
-// 17  24   1   8  15
+// 4  3  8
+// 9  5  1
+// 2  7  6
