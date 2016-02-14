@@ -73,11 +73,7 @@ $(document).on('ready', function() {
       alert("O is the winner! Restart the game?");
     } else if ( xSum === 15 ) {
       alert("X is the winner! Restart the game?");
-    }
-
-    // If the board is full and neither player has won,
-    // declare a draw
-    if ( $('td:empty') === []) {
+    } else if ( $('td:empty') === []) {
       alert("Game over. It's a tie. Restart the game?");
     }
   }
