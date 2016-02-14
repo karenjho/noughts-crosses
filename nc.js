@@ -70,9 +70,15 @@ $(document).on('ready', function() {
 
     // Compare oSum and xSum to the winning sum
     if ( oSum === 15 ) {
-      alert("O is the winner!");
+      alert("O is the winner! Restart the game?");
     } else if ( xSum === 15 ) {
-      alert("X is the winner!");
+      alert("X is the winner! Restart the game?");
+    }
+
+    // If the board is full and neither player has won,
+    // declare a draw
+    if ( $('td:empty') === []) {
+      alert("Game over. It's a tie. Restart the game?");
     }
   }
 
