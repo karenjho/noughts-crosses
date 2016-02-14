@@ -57,6 +57,10 @@ $(document).on('ready', function() {
     });
   }
 
+  function restartGame() {
+    location.reload();
+  }
+
   function checkWinningTurn() {
     // Sum all id numbers for objects of 'o' class
     var oIds = getIds('.o');
@@ -68,13 +72,16 @@ $(document).on('ready', function() {
     var xIdNums = getIdNums(xIds);
     var xSum = sumIds(xIdNums);
 
-    // Compare oSum and xSum to the winning sum
-    if ( oSum === 15 ) {
+    // Compare oSum and xSum to the winning sum; or find a tie/draw
+    if ( oSum === 15 && oIds.length >= 3 ) {
       alert("O is the winner! Restart the game?");
-    } else if ( xSum === 15 ) {
+      restartGame();
+    } else if ( xSum === 15 && xIds.length >=3 ) {
       alert("X is the winner! Restart the game?");
-    } else if ( $('td:empty') === []) {
+      restartGame();
+    } else if ( $('td:empty') === [] ) {
       alert("Game over. It's a tie. Restart the game?");
+      restartGame();
     }
   }
 
