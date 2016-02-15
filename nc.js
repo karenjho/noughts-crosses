@@ -3,17 +3,47 @@ $(document).on('ready', function() {
   // Count the turns taken
   var turn = 0;
   // Declare the size of the game board
-  var gameBoard = 5;
+  var gameBoard = 10;
+
   // Calculate the minimum number of turns needed to win
-  var minWinningTurn = ( gameboard * 2 ) - 1
+  var minWinningTurn = ( gameBoard * 2 ) - 1
+
+  // Create a game board based on the given gameBoard size
+  function populateGameBoard(boardSize) {
+
+    // Inside the game grid (table), create as many rows as specified by gameBoard
+    for (var i = 0; i < boardSize; i++) {
+      var newRow = "<tr></tr>";
+      $('#gameGrid').append(newRow);
+      $('tr').addClass('gameRow');
+    }
+
+    // In each row, create as many cells as specified by gameBoard
+    for (var i = 0; i < boardSize; i++) {
+      var newCell = "<td></td>";
+      $('.gameRow').append(newCell);
+    }
+
+    // Assign the appropriate id to to each cell
+    for (var i = 0; i < boardSize; i++) {
+      var row = i + 1;
+      $('.gameRow').eq(i).find('td').each( function(n) {
+        var col = n + 1;
+        var cellId = "xy-" + row + "-" + col
+        $(this).attr('id', cellId);
+      });
+    }
+
+  }
+
+  // Create the game board according to the given size
+  populateGameBoard(gameBoard);
 
   // When someone clicks a cell, define the function when the click event occurs
   // .one() only allows the event function to be performed once
   $('td').one('click', function() {
-
-    // We will need to perform multiples functions on the clicked td
-    // So we will store the jQuery function $(this) in a variable
-    var self = $(this);
+    // Store the jQuery function $(this) in a variable
+    var self = $(this)
 
     // How to alternate between X and O?
     // Assign X or O depending on whether the turn is even or odd
