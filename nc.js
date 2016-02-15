@@ -3,6 +3,9 @@ $(document).on('ready', function() {
   // Count the turns taken
   var turn = 0;
 
+  // Declare the size of the game board
+  var gameBoard = 5;
+
   // Place X or O in a clicked cell, depending on the turn
   $('td').one('click', function() {
 
@@ -41,80 +44,131 @@ $(document).on('ready', function() {
     });
   }
 
-  // Get the x-positions from the id values array
-  function xPositions(idArray) {
-    return $(idArray)
+  // Get the x-y coordinates from the id values array
+  function getCoords(arrayOfIds) {
+    var arrayOfCoordinates = [];
+    $(arrayOfIds)
       .map(function(index) {
-        return parseInt(this.substr(3, 1));
+        arrayOfCoordinates.push( [ parseInt(this.substr(3, 1)), parseInt(this.substr(5, 1)) ] );
       })
       .get();
+
+    return arrayOfCoordinates;
   }
 
-  // Get the y-positions from the id values array
-  function yPositions(idArray) {
-    return $(idArray)
-      .map(function(index) {
-        return parseInt(this.substr(5, 1));
-      })
-      .get();
+  // Count the number of times a coordinate appears in the coordinates array
+  function countDuplicates(coordinates) {
+    var count = {};
+    var countValues = [];
+
+    coordinates.forEach( function(i) {
+      count[i] = ( count[i] || 0 ) + 1 ;
+    });
+
+    countValues = Object.keys(count)
+                        .map(function (key) {
+                          return count[key];
+                        });
+
+    return countValues;
   }
 
   // Check for a horizontal row win
-  function checkRow(yArray) {
-    var winningRow = false;
+  function countRow(playerCoords) {
+    var yCoords = [];
 
-    var row1 = $.grep(yArray, function(a) {
-      return a === 1;
-    });
-    var row2 = $.grep(yArray, function(a) {
-      return a === 2;
-    });
-    var row3 = $.grep(yArray, function(a) {
-      return a === 3;
-    });
-    if ( $(row1).length === 3 || $(row2).length === 3 || $(row3).length === 3) {
-      return winningRow = true;
+    // Retrieve the y coordinates of the player coordinates
+    for ( var i = 0; i < playerCoords.length; i++ ) {
+      yCoords.push ( playerCoords[i][1] );
     }
+
+    // Count the number of times a y-coordinate appears in the y-coordinates array
+    return countDuplicates(yCoords);
   }
 
   // Check for a vertical column win
-  function checkColumn(xArray) {
-    var winningColumn = false;
+  function countCol(playerCoords) {
+    var xCoords = [];
 
-    var col1 = $.grep(xArray, function(a) {
-      return a === 1;
-    });
-    var col2 = $.grep(xArray, function(a) {
-      return a === 2;
-    });
-    var col3 = $.grep(xArray, function(a) {
-      return a === 3;
-    });
-    if ( $(col1).length === 3 || $(col2).length === 3 || $(col3).length === 3) {
-      return winningColumn = true;
+    // Retrieve the x coordinates of the player coordinates
+    for ( var i = 0; i < playerCoords.length; i++ ) {
+      xCoords.push ( playerCoords[i][0] );
     }
+
+    // Count the number of times a y-coordinate appears in the y-coordinates array
+    return countDuplicates(xCoords);
+  }
+
+  // Function to check if values are true
+  function isTrue(value) {
+    return value === true;
+  }
+
+  // Check for a descending diagonal win
+  function countDescDiagonal(playerCoords) {
+    var descDiagonal = [];
+
+    for ( var i = 0; i < playerCoords.length; i++ ) {
+      descDiagonal.push ( playerCoords[i][0] === playerCoords[i][1] );
+    }
+
+    return descDiagonal.filter(isTrue);
+  }
+
+  // Check for a ascending diagonal win
+  function countAscDiagonal(playerCoords) {
+    var ascDiagonal = [];
+
+    for ( var i = 0; i < playerCoords.length; i++ ) {
+      ascDiagonal.push ( playerCoords[i][0] === ( gameBoard - playerCoords[i][1] + 1 ) );
+    }
+
+    return ascDiagonal.filter(isTrue);
+  }
+
+  // Check if a player has a winning line
+  function checkForWinLine(rowCount, colCount, descDiagCount, ascDiagCount) {
+    return  ( rowCount.includes(gameBoard) ||
+              colCount.includes(gameBoard) ||
+              ( descDiagCount.length === gameBoard ) ||
+              ( ascDiagCount.length === gameBoard )
+            );
   }
 
   function checkWinningTurn() {
-    // Sum all id numbers for objects of 'o' class
-    var oIds = getIds('.o');
-    var oXPositions = xPositions(oIds);
-    var oYPositions = yPositions(oIds);
-    var oWinningRow = checkRow(oYPositions);
-    var oWinningColumn  = checkColumn(oXPositions);
 
-    // Sum all id numbers for objects of 'x' class
-    var xIds = getIds('.x');
-    var xXPositions = xPositions(xIds);
-    var xYPositions = yPositions(xIds);
-    var xWinningRow = checkRow(xYPositions);
-    var xWinningColumn  = checkColumn(xXPositions);
+    // Retrieve all id values for Player O
+    var oPlayerIds = getIds('.o');
+    // Strip out coordinates from Player O's id values
+    var oPlayerCoords = getCoords(oPlayerIds);
 
-    // Compare oSum and xSum to the winning sum
-    if ( xWinningRow || xWinningColumn ) {
-      return alert( "X is the winner!" );
-    } else if ( oWinningRow || oWinningColumn ) {
-      return alert( "O is the winner!" );
+    var oPlayerRows = countRow(oPlayerCoords);
+    var oPlayerCols = countCol(oPlayerCoords);
+    var oPlayerDescDiagonal = countDescDiagonal(oPlayerCoords);
+    var oPlayerAscDiagonal = countAscDiagonal(oPlayerCoords);
+
+    // Check for Player O wins
+    var oPlayerWin = checkForWinLine(oPlayerRows, oPlayerCols, oPlayerDescDiagonal, oPlayerAscDiagonal);
+
+    // Retrieve all id values for Player X
+    var xPlayerIds = getIds('.x');
+    // Strip out coordinates from Player X's id values
+    var xPlayerCoords = getCoords(xPlayerIds);
+
+    var xPlayerRows = countRow(xPlayerCoords);
+    var xPlayerCols = countCol(xPlayerCoords);
+    var xPlayerDescDiagonal = countDescDiagonal(xPlayerCoords);
+    var xPlayerAscDiagonal = countAscDiagonal(xPlayerCoords);
+
+    // Check for Player X wins
+    var xPlayerWin = checkForWinLine(xPlayerRows, xPlayerCols, xPlayerDescDiagonal, xPlayerAscDiagonal);
+
+    // If Player O wins, alert that Player O is winner.
+    // If Player X wins, alert that Player O is winner.
+    if ( oPlayerWin ) {
+      alert( "O is the winner!" );
+    } else if ( xPlayerWin ) {
+      alert( "X is the winner!" );
     }
   }
 
