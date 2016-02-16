@@ -1,7 +1,6 @@
 html {
   box-sizing: border-box;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1.35;
   height: 100%;
 }
@@ -12,19 +11,36 @@ html {
   box-sizing: inherit;
 }
 
-td {
-  width: 100px;
-  height: 100px;
-  border: 3px solid #999999;
+body {
+  background-color: #F4F4ED;
+}
+
+h1 {
+  color: #666666;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
   font-size: 48px;
+  text-transform: uppercase;
+}
+
+td {
+  width: 3em;
+  height: 3em;
+  border: 2px solid #ffffff;
+  background-color: #6decaf;
+  color: #ffffff;
+  font-size: 1.7em;
   font-weight: bold;
   text-align: center;
 }
 
+td:hover {
+  background-color: #00f0b5;
+}
+
 .x {
-  background-color: #7fff00;
+  background-color: #5e239d;
 }
 
 .o {
-  background-color: #ff8a00;
+  background-color: #f61067;
 }

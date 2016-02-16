@@ -3,7 +3,7 @@ $(document).on('ready', function() {
   // Count the turns taken
   var turn = 0;
   // Declare the size of the game board
-  var gameBoard = 10;
+  var gameBoard = 15;
 
   // Calculate the minimum number of turns needed to win
   var minWinningTurn = ( gameBoard * 2 ) - 1
@@ -24,7 +24,7 @@ $(document).on('ready', function() {
       $('.gameRow').append(newCell);
     }
 
-    // Assign the appropriate id to to each cell
+    // Assign the appropriate id value with xy coordinates to each cell
     for (var i = 0; i < boardSize; i++) {
       var row = i + 1;
       $('.gameRow').eq(i).find('td').each( function(n) {
@@ -57,9 +57,9 @@ $(document).on('ready', function() {
 
     // Place X or O in a clicked cell, depending on the turn
     if (turn % 2) {
-      self.html('O').addClass('o');
+      self.html('<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>').addClass('o');
     } else {
-      self.html('X').addClass('x');
+      self.html('<span class="glyphicon glyphicon-star" aria-hidden="true"></span>').addClass('x');
     }
 
     // Figure out whether the turn was a winning one
@@ -209,10 +209,16 @@ $(document).on('ready', function() {
 
     // If Player O wins, alert that Player O is winner.
     if ( oPlayerWin ) {
-      alert( "O is the winner!" );
+      alert( "O is the winner! Play again?" );
+      location.reload();
     // If Player X wins, alert that Player O is winner.
     } else if ( xPlayerWin ) {
-      alert( "X is the winner!" );
+      alert( "X is the winner! Play again?" );
+      location.reload();
+    // If all squares have been filled and no one has one, declare a tie.
+    } else if ( $('td:empty').length === 0 ) {
+      alert( "It's a tie! Everyone's a winner! Play again?" );
+      location.reload();
     }
   }
 
