@@ -44,3 +44,7 @@ td:hover {
 .o {
   background-color: #f61067;
 }
+
+#gameContainer {
+  margin-top: 1.5em;
+}
