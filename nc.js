@@ -1,15 +1,55 @@
-$(document).on('ready', function() {
+$(document).on('ready', function(event) {
+  event.stopPropagation();
 
-  // Count the turns taken
-  var turn = 0;
-  // Declare the size of the game board
-  var gameBoard = 15;
+  $('#boardButton').on('click', function(event) {
+    event.stopPropagation();
+    // Set the game Board size
+    var gameBoard = $('#boardSize').val();
 
-  // Calculate the minimum number of turns needed to win
-  var minWinningTurn = ( gameBoard * 2 ) - 1
+    populateGameBoard(gameBoard);
+
+    // When someone clicks a cell, define the function when the click event occurs
+    // .one() only allows the event function to be performed once
+    $('td').one('click', function(event) {
+      event.stopPropagation();
+      // Count the turns taken
+      var turn = 0;
+      // Store the jQuery function $(this) in a variable
+      var self = $(this)
+      // Calculate the minimum number of turns needed to win
+      var minWinningTurn = ( gameBoard * 2 ) - 1
+
+      // How to alternate between X and O?
+      // Assign X or O depending on whether the turn is even or odd
+        // i.e. 0 % 2 = 0;
+        //      1 % 2 = 1;
+        //      2 % 2 = 0;
+        //      3 % 2 = 1;
+        //      4 % 2 = 0;
+      // 0 is false-y
+      // 1 is truth-y
+
+      // Place X or O in a clicked cell, depending on the turn
+      if (turn % 2) {
+        self.html('<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>').addClass('o');
+      } else {
+        self.html('<span class="glyphicon glyphicon-star" aria-hidden="true"></span>').addClass('x');
+      }
+
+      // Figure out whether the turn was a winning one
+
+      if (turn > minWinningTurn ) {
+        checkWinningTurn();
+      }
+
+      turn++; // Increment the turn counter
+    });
+  });
 
   // Create a game board based on the given gameBoard size
   function populateGameBoard(boardSize) {
+
+    $('#gameGrid').empty();
 
     // Inside the game grid (table), create as many rows as specified by gameBoard
     for (var i = 0; i < boardSize; i++) {
@@ -35,41 +75,6 @@ $(document).on('ready', function() {
     }
 
   }
-
-  // Create the game board according to the given size
-  populateGameBoard(gameBoard);
-
-  // When someone clicks a cell, define the function when the click event occurs
-  // .one() only allows the event function to be performed once
-  $('td').one('click', function() {
-    // Store the jQuery function $(this) in a variable
-    var self = $(this)
-
-    // How to alternate between X and O?
-    // Assign X or O depending on whether the turn is even or odd
-      // i.e. 0 % 2 = 0;
-      //      1 % 2 = 1;
-      //      2 % 2 = 0;
-      //      3 % 2 = 1;
-      //      4 % 2 = 0;
-    // 0 is false-y
-    // 1 is truth-y
-
-    // Place X or O in a clicked cell, depending on the turn
-    if (turn % 2) {
-      self.html('<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>').addClass('o');
-    } else {
-      self.html('<span class="glyphicon glyphicon-star" aria-hidden="true"></span>').addClass('x');
-    }
-
-    // Figure out whether the turn was a winning one
-
-    if (turn > minWinningTurn ) {
-      checkWinningTurn();
-    }
-
-    turn++; // Increment the turn counter
-  });
 
   // Get all id values for all objects of a specific class
   function getIds(cellClass) {
