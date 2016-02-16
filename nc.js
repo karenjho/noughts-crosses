@@ -1,19 +1,18 @@
-$(document).on('ready', function(event) {
-  event.stopPropagation();
+$(document).on('ready', function() {
 
-  $('#boardButton').on('click', function(event) {
-    event.stopPropagation();
+  $('#boardButton').on('click', function() {
     // Set the game Board size
     var gameBoard = $('#boardSize').val();
 
     populateGameBoard(gameBoard);
 
+    // Count the turns taken
+    var turn = 0;
+
     // When someone clicks a cell, define the function when the click event occurs
     // .one() only allows the event function to be performed once
     $('td').one('click', function(event) {
       event.stopPropagation();
-      // Count the turns taken
-      var turn = 0;
       // Store the jQuery function $(this) in a variable
       var self = $(this)
       // Calculate the minimum number of turns needed to win
